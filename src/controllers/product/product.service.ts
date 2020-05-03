@@ -19,7 +19,7 @@ export class ProductService {
 
             // Sort true first, then false
             products.sort(function (a, b) {
-                return b.active - a.active
+                return a.active - b.active
             })
 
             return {
