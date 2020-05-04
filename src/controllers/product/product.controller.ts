@@ -9,29 +9,27 @@ export class ProductController {
     }
 
     // Get products any query
-    @Post('getproduct')
+    @Post('getproducts')
     async getProduct(@Req() request: Request) {
 
         const query = request.body
-        return this.productService.getProduct(query)
+        return this.productService.getProducts(query)
     }
 
     // Get products by location
-    @Get('getproductbylocation/:lon/:lat/:meters')
+    @Post('getproductbylocation')
     async getProductByLocation(@Req() request: Request) {
 
-        const meters = +request.params.meters
-        const longitude = +request.params.lon
-        const latitude = +request.params.lat
-        return this.productService.getProductByLocation(meters, longitude, latitude)
+        const query = request.body
+        return this.productService.getProductByLocation(query)
     }
 
     // Get a product by ID
-    @Get('getproduct/:id')
+    @Post('getproduct')
     async getProductById(@Req() request: Request) {
 
-        const productId = request.params.id
-        return this.productService.getProductById(productId)
+        const query = request.body
+        return this.productService.getProductById(query)
     }
 
     // Add products for a user
@@ -45,20 +43,19 @@ export class ProductController {
     }
 
     // Delete a product by ID
-    @Delete('deleteproduct/:id')
+    @Post('deleteproduct')
     async deleteProductById(@Req() request: Request) {
 
-        const productId = request.params.id
-        return this.productService.deleteProductById(productId)
+        const query = request.body
+        return this.productService.deleteProductById(query)
     }
 
     // Update a product by ID
-    @Put('updateproduct/:id')
+    @Post('updateproduct')
     async updateProductById(@Req() request: Request) {
 
-        const productId = request.params.id
-        let product = request.body
-        return this.productService.updateProductById(productId, product)
+        const query = request.body
+        return this.productService.updateProductById(query)
     }
 
 }

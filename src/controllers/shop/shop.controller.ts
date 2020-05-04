@@ -9,19 +9,19 @@ export class ShopController {
     }
 
     // Get shops any query
-    @Post('getshop')
+    @Post('getshops')
     async getShop(@Req() request: Request) {
 
         const query = request.body
-        return this.shopService.getShop(query)
+        return this.shopService.getShops(query)
     }
 
     // Get a shop by ID
-    @Get('getshop/:id')
+    @Post('getshop')
     async getShopById(@Req() request: Request) {
 
-        const shopId = request.params.id
-        return this.shopService.getShopById(shopId)
+        const query = request.body
+        return this.shopService.getShopById(query)
     }
 
 }

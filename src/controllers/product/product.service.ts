@@ -11,7 +11,7 @@ export class ProductService {
     }
 
     // Generic get product based on any query
-    async getProduct(query: any) {
+    async getProducts(query: any) {
 
         const products = await this.mongoService.findMongo(this.productCollection, query)
 
@@ -41,28 +41,40 @@ export class ProductService {
     // Get products withing a location
     // Mongo - first lon then lat
     // Google - first lat then lon
-    async getProductByLocation(meters: number, lon: number, lat: number) {
+    async getProductByLocation(query: any) {
 
-        const query = {
+
+        if (!query.lon || !query.lat || !query.distance) {
+            return {
+                success: false,
+                message: 'Unable to retrieve products!'
+            }
+        }
+
+        const meters = +query.distance
+        const longitude = +query.lon
+        const latitude = +query.lat
+
+        const mongoQuery = {
             active: true,
             location: {
                 $nearSphere: {
                     $geometry: {
                         type: "Point",
-                        coordinates: [lon, lat]
+                        coordinates: [longitude, latitude]
                     },
                     $maxDistance: meters
                 }
             }
         }
 
-        const products = await this.mongoService.findMongo(this.productCollection, query)
+        const products = await this.mongoService.findMongo(this.productCollection, mongoQuery)
 
         if (products) {
 
             // Add a distance field
             for (let product of products) {
-                product.distance = (await this.utilService.getDistanceInKm(lon, lat, product.location.coordinates[0], product.location.coordinates[1])).toFixed(2)
+                product.distance = (await this.utilService.getDistanceInKm(longitude, latitude, product.location.coordinates[0], product.location.coordinates[1])).toFixed(2)
             }
 
             return {
@@ -82,8 +94,16 @@ export class ProductService {
     }
 
     // Get product by productId
-    async getProductById(productId: string) {
+    async getProductById(query: any) {
 
+        if (!query.id) {
+            return {
+                success: false,
+                message: 'Unable to retrieve product!'
+            }
+        }
+
+        let productId = query.id
         const product = await this.mongoService.findOneMongo(this.productCollection, productId)
 
         if (product) {
@@ -129,8 +149,16 @@ export class ProductService {
 
 
     // Delete a product by productId
-    async deleteProductById(productId: string) {
+    async deleteProductById(query: any) {
 
+        if (!query.id) {
+            return {
+                success: false,
+                message: 'Unable to delete product!'
+            }
+        }
+
+        let productId = query.id
         const result = await this.mongoService.deleteOneMongo(this.productCollection, productId)
 
         if (result?.deletedCount === 1) {
@@ -149,11 +177,19 @@ export class ProductService {
     }
 
     // Update a product by productId
-    async updateProductById(id: string, body: any) {
+    async updateProductById(query) {
 
-        const result = await this.mongoService.updateOneMongo(this.productCollection, id, body)
+        if (!query.id) {
+            return {
+                success: false,
+                message: 'Unable to update product!'
+            }
+        }
 
-        console.log(result)
+        let productId = query.id
+        delete query.id
+
+        const result = await this.mongoService.updateOneMongo(this.productCollection, productId, query)
 
         if (result?.modifiedCount === 1) {
 
@@ -170,7 +206,7 @@ export class ProductService {
         } else {
             return {
                 success: false,
-                message: 'Unable to updated product!'
+                message: 'Unable to update product!'
             }
         }
     }

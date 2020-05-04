@@ -11,7 +11,7 @@ export class ShopService {
     }
 
     // Generic get shop based on any query
-    async getShop(query: any) {
+    async getShops(query: any) {
 
         const shops = await this.mongoService.findMongo(this.shopCollection, query)
 
@@ -39,8 +39,16 @@ export class ShopService {
     }
 
     // Get shop by shopId
-    async getShopById(shopId: string) {
+    async getShopById(query: any) {
 
+        if (!query.id) {
+            return {
+                success: false,
+                message: 'Unable to retrieve shop!'
+            }
+        }
+
+        let shopId = query.id
         const shop = await this.mongoService.findOneMongo(this.shopCollection, shopId)
 
         if (shop) {
