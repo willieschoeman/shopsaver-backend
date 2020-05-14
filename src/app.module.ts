@@ -15,7 +15,10 @@ import { ShopService } from './controllers/shop/shop.service';
 
 @Module({
   imports: [
-    MongoModule.forRoot('mongodb://127.0.0.1', 'shopsaver'),
+    MongoModule.forRoot('mongodb://mongo', 'shopsaver', {
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+      }),
     MulterModule
   ],
   controllers: [
