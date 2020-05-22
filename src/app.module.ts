@@ -15,7 +15,7 @@ import { ShopService } from './controllers/shop/shop.service';
 
 @Module({
   imports: [
-    MongoModule.forRoot('mongodb://mongo', 'shopsaver', {
+    MongoModule.forRoot('mongodb://127.0.0.1', 'shopsaver', {
       useUnifiedTopology: true,
       useNewUrlParser: true
       }),
