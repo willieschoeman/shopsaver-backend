@@ -3,6 +3,7 @@ import { TokenService } from '../services/token/token.service';
 
 // Can access these URL's without AUTH
 const nonAuthUrls = [
+  '/api/product/getproductbylocation'
 ]
 
 @Injectable()

@@ -55,8 +55,24 @@ export class ProductService {
         const longitude = +query.lon
         const latitude = +query.lat
 
+        delete query.distance
+        delete query.lon
+        delete query.lat
+
+        if (query?.category === '') {
+            delete query.category
+        }
+
+        if (query?.maxPrice) {
+            query.productPriceNow = {
+                $lte: query.maxPrice
+            }
+            delete query.maxPrice
+        }
+        
         const mongoQuery = {
             active: true,
+            ...query,
             location: {
                 $nearSphere: {
                     $geometry: {
